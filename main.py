@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
-from routers import pages
 
 app = FastAPI(title="YouTube Plus Plus")
 app.mount("/static", StaticFiles(directory="static"), name="static")

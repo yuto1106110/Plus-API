@@ -109,3 +109,19 @@ def _format_invidious_channel(data: dict) -> dict:
         "thumbnail": data.get("authorThumbnails", [{}])[-1].get("url"),
         "subscriber_count": data.get("subCount"),
     }
+
+async def get_stream_urls_invidious(video_id: str) -> list:
+    data = await fetch_invidious(f"/api/v1/videos/{video_id}")
+    formats = data.get("adaptiveFormats", []) + data.get("formatStreams", [])
+    return [
+        {
+            "format_id": f.get("itag"),
+            "ext": f.get("container"),
+            "resolution": f.get("qualityLabel") or f.get("audioQuality"),
+            "url": f.get("url"),
+            "vcodec": f.get("encoding"),
+            "acodec": f.get("audioEncoding"),
+            "bitrate": f.get("bitrate"),
+        }
+        for f in formats if f.get("url")
+    ]
